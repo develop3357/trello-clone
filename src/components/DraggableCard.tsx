@@ -21,16 +21,28 @@ interface IDraggableCardProps {
 function DraggableCard({ toDoId, toDoText, index }: IDraggableCardProps) {
   return (
     <Draggable key={toDoId} draggableId={"" + toDoId} index={index}>
-      {(provided, snapshot) => (
-        <Card
-          isDragging={snapshot.isDragging}
-          ref={provided.innerRef}
-          {...provided.dragHandleProps}
-          {...provided.draggableProps}
-        >
-          {toDoText}
-        </Card>
-      )}
+      {(provided, snapshot) => {
+        const style = {
+          ...provided.draggableProps.style,
+          transform:
+            provided.draggableProps.style?.transform + " rotate(-5deg)",
+        };
+        return (
+          <Card
+            isDragging={snapshot.isDragging}
+            ref={provided.innerRef}
+            {...provided.dragHandleProps}
+            {...provided.draggableProps}
+            style={
+              snapshot.isDragging && !snapshot.isDropAnimating
+                ? style
+                : provided.draggableProps.style
+            }
+          >
+            {toDoText}
+          </Card>
+        );
+      }}
     </Draggable>
   );
 }
