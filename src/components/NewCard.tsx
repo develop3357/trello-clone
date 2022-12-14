@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { useSetRecoilState } from "recoil";
-import { ITodo, toDoState } from "../atoms";
+import { toDoState } from "../atoms";
 import { useEffect, useState } from "react";
 
 interface IForm {

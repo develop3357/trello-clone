@@ -1,7 +1,7 @@
 import { Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import DraggableCard from "./DraggableCard";
-import { ITodo } from "../atoms";
+import { IToDo } from "../atoms";
 import NewCard from "./NewCard";
 
 const Wrapper = styled.div`
@@ -35,7 +35,7 @@ const Area = styled.div`
 `;
 
 interface IBoardProps {
-  toDos: ITodo[];
+  toDos: IToDo[];
   boardId: string;
 }
 

@@ -1,7 +1,7 @@
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { toDoState } from "./atoms";
+import { ToDoManager, toDoState } from "./atoms";
 import Board from "./components/Board";
 
 const Wrapper = styled.div`
@@ -34,34 +34,18 @@ const AddNewBoard = styled.div`
 
 function App() {
   const [toDos, setToDos] = useRecoilState(toDoState);
-  const onDragEnd = (info: DropResult) => {
-    console.log(info);
-    const { destination, source } = info;
+  const onDragEnd = ({ destination, source }: DropResult) => {
     if (!destination) return;
-    if (destination?.droppableId === source.droppableId) {
-      setToDos((allBoards) => {
-        const boardCopy = [...allBoards[source.droppableId]];
-        const [taskObj] = boardCopy.splice(source.index, 1);
-        boardCopy.splice(destination.index, 0, taskObj);
-        return {
-          ...allBoards,
-          [source.droppableId]: boardCopy,
-        };
-      });
-    }
-    if (destination?.droppableId !== source.droppableId) {
-      setToDos((allBoards) => {
-        const sourceBoard = [...allBoards[source.droppableId]];
-        const destinationBoard = [...allBoards[destination?.droppableId]];
-        const [taskObj] = sourceBoard.splice(source.index, 1);
-        destinationBoard.splice(destination.index, 0, taskObj);
-        return {
-          ...allBoards,
-          [source.droppableId]: sourceBoard,
-          [destination.droppableId]: destinationBoard,
-        };
-      });
-    }
+    setToDos((currentToDos) => {
+      return ToDoManager.init(currentToDos)
+        .moveCard(
+          source.droppableId,
+          source.index,
+          destination.droppableId,
+          destination.index
+        )
+        .done();
+    });
   };
   const onAddNewBoardClick = (event: React.MouseEvent<HTMLDivElement>) => {
     // TODO handle add new board click
