@@ -30,20 +30,8 @@ const Title = styled.div`
   }
 `;
 
-interface IAreaProps {
-  isDraggingFromThis: boolean;
-  isDraggingOver: boolean;
-}
-
-const Area = styled.div<IAreaProps>`
-  background-color: ${(props) =>
-    props.isDraggingOver
-      ? "#dfe6e9"
-      : props.isDraggingFromThis
-      ? "#b2bec3"
-      : "transparent"};
+const Area = styled.div`
   flex-grow: 1;
-  transition: background-color 0.3s ease-in-out;
 `;
 
 interface IBoardProps {
@@ -65,19 +53,15 @@ function Board({ toDos, boardId }: IBoardProps) {
         <span onClick={onBoardDeleteClick}>🗑️</span>
       </Title>
       <Droppable droppableId={boardId}>
-        {(provided, snapshot) => (
-          <Area
-            isDraggingOver={snapshot.isDraggingOver}
-            isDraggingFromThis={Boolean(snapshot.draggingFromThisWith)}
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-          >
+        {(provided) => (
+          <Area ref={provided.innerRef} {...provided.droppableProps}>
             {toDos.map((toDo, index) => (
               <DraggableCard
                 key={toDo.id}
                 toDoId={toDo.id}
                 toDoText={toDo.text}
                 index={index}
+                boardId={boardId}
               />
             ))}
             {provided.placeholder}
