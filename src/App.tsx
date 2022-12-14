@@ -5,20 +5,31 @@ import { toDoState } from "./atoms";
 import Board from "./components/Board";
 
 const Wrapper = styled.div`
-  display: flex;
-  width: 100vh;
-  margin: 0 auto;
-  justify-content: center;
-  align-items: center;
   height: 100vh;
+  overflow-y: hidden;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
 `;
 
 const Boards = styled.div`
+  padding: 15px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  width: 100%;
   gap: 10px;
+`;
+
+const AddNewBoard = styled.div`
+  background-color: rgb(30, 30, 30, 0.7);
+  color: white;
+  border-radius: 5px;
+  padding: 10px;
+  min-width: 240px;
+  &:hover {
+    cursor: pointer;
+    background-color: rgb(40, 40, 40, 0.5);
+  }
 `;
 
 function App() {
@@ -52,6 +63,9 @@ function App() {
       });
     }
   };
+  const onAddNewBoardClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    // TODO handle add new board click
+  };
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Wrapper>
@@ -59,6 +73,7 @@ function App() {
           {Object.keys(toDos).map((boardId) => (
             <Board boardId={boardId} key={boardId} toDos={toDos[boardId]} />
           ))}
+          <AddNewBoard onClick={onAddNewBoardClick}>+ New Board</AddNewBoard>
         </Boards>
       </Wrapper>
     </DragDropContext>

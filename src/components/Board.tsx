@@ -1,25 +1,33 @@
 import { Droppable } from "react-beautiful-dnd";
-import { useForm } from "react-hook-form";
-import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { ITodo, toDoState } from "../atoms";
 import DraggableCard from "./DraggableCard";
+import { ITodo } from "../atoms";
+import NewCard from "./NewCard";
 
 const Wrapper = styled.div`
-  width: 300px;
-  padding-top: 10px;
   background-color: ${(props) => props.theme.boardColor};
   border-radius: 5px;
-  min-height: 300px;
+  padding: 10px;
+  width: 240px;
+  min-height: 200px;
+  max-height: 75vh;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
 `;
 
-const Title = styled.h2`
-  text-align: center;
-  font-weight: 600;
+const Title = styled.div`
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 10px;
-  font-size: 18px;
+  font-size: 16px;
+  h2 {
+    font-weight: 600;
+    flex-grow: 1;
+  }
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 interface IAreaProps {
@@ -36,16 +44,6 @@ const Area = styled.div<IAreaProps>`
       : "transparent"};
   flex-grow: 1;
   transition: background-color 0.3s ease-in-out;
-  padding: 20px;
-`;
-
-const Form = styled.form`
-  width: 100%;
-  display: flex;
-  input {
-    width: fit-content;
-    flex-grow: 1;
-  }
 `;
 
 interface IBoardProps {
@@ -53,36 +51,19 @@ interface IBoardProps {
   boardId: string;
 }
 
-interface IForm {
-  toDo: string;
-}
-
 function Board({ toDos, boardId }: IBoardProps) {
-  const { register, setValue, handleSubmit } = useForm<IForm>();
-  const setToDos = useSetRecoilState(toDoState);
-  const onValid = ({ toDo }: IForm) => {
-    const newToDo = {
-      id: Date.now(),
-      text: toDo,
-    };
-    setToDos((allBoards) => {
-      return {
-        ...allBoards,
-        [boardId]: [newToDo, ...allBoards[boardId]],
-      };
-    });
-    setValue("toDo", "");
+  const onBoardIdClick = (event: React.MouseEvent<HTMLHeadElement>) => {
+    // TODO: handle click event
+  };
+  const onBoardDeleteClick = (event: React.MouseEvent<HTMLSpanElement>) => {
+    // TODO: handle click event
   };
   return (
     <Wrapper>
-      <Title>{boardId}</Title>
-      <Form onSubmit={handleSubmit(onValid)}>
-        <input
-          {...register("toDo", { required: true })}
-          type="text"
-          placeholder={`Add task on ${boardId}`}
-        />
-      </Form>
+      <Title>
+        <h2 onClick={onBoardIdClick}>{boardId}</h2>
+        <span onClick={onBoardDeleteClick}>🗑️</span>
+      </Title>
       <Droppable droppableId={boardId}>
         {(provided, snapshot) => (
           <Area
@@ -103,6 +84,7 @@ function Board({ toDos, boardId }: IBoardProps) {
           </Area>
         )}
       </Droppable>
+      <NewCard boardId={boardId} />
     </Wrapper>
   );
 }
