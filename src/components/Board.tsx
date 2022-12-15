@@ -1,8 +1,9 @@
 import { Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import DraggableCard from "./DraggableCard";
-import { IToDo } from "../atoms";
+import { IToDo, ToDoManager, toDoState } from "../atoms";
 import NewCard from "./NewCard";
+import { useSetRecoilState } from "recoil";
 
 const Wrapper = styled.div`
   background-color: ${(props) => props.theme.boardColor};
@@ -40,11 +41,26 @@ interface IBoardProps {
 }
 
 function Board({ toDos, boardId }: IBoardProps) {
+  const setToDos = useSetRecoilState(toDoState);
   const onBoardIdClick = (event: React.MouseEvent<HTMLHeadElement>) => {
-    // TODO: handle click event
+    const newBoardId = prompt("Enter new board name:", boardId);
+    if (newBoardId && newBoardId.length > 0 && newBoardId !== boardId) {
+      setToDos((currentToDos) =>
+        ToDoManager.init(currentToDos)
+          .changeBoardName(boardId, newBoardId)
+          .done()
+      );
+    }
   };
   const onBoardDeleteClick = (event: React.MouseEvent<HTMLSpanElement>) => {
-    // TODO: handle click event
+    const proceed = window.confirm(
+      `Board "${boardId}" and all cards contained within will be removed.\nProceed?`
+    );
+    if (proceed) {
+      setToDos((currentToDos) =>
+        ToDoManager.init(currentToDos).removeBoard(boardId).done()
+      );
+    }
   };
   return (
     <Wrapper>

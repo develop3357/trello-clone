@@ -62,7 +62,7 @@ function NewCard({ boardId }: INewCardProps) {
   };
   useEffect(() => {
     if (active) setFocus("toDo");
-  }, [active]);
+  }, [active, setFocus]);
   return active ? (
     <Form onSubmit={handleSubmit(onValid)}>
       <input

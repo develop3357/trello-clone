@@ -1,6 +1,8 @@
 import React from "react";
 import { Draggable } from "react-beautiful-dnd";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
+import { ToDoManager, toDoState } from "../atoms";
 
 const Card = styled.div<{ isMovable: boolean }>`
   border-radius: 5px;
@@ -29,8 +31,20 @@ function DraggableCard({
   index,
   boardId,
 }: IDraggableCardProps) {
+  const setToDos = useSetRecoilState(toDoState);
   const onCardClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    // TODO handle card click event
+    const newText = window.prompt("Enter new content:", toDoText);
+    if (newText && newText.length > 0 && newText !== toDoText) {
+      const newToDo = {
+        id: toDoId,
+        text: newText,
+      };
+      setToDos((currentToDos) =>
+        ToDoManager.init(currentToDos)
+          .modifyCard(newToDo, boardId, index)
+          .done()
+      );
+    }
   };
   return (
     <Draggable key={toDoId} draggableId={"" + toDoId} index={index}>

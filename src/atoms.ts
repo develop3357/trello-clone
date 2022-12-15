@@ -69,7 +69,7 @@ export class ToDoManager {
     delete this.data[boardId];
     return this;
   }
-  modifyBoardName(boardId: string, newName: string) {
+  changeBoardName(boardId: string, newName: string) {
     this.data[newName] = this.data[boardId];
     delete this.data[boardId];
     return this;
@@ -82,7 +82,7 @@ export class ToDoManager {
 export const toDoState = atom<IToDoState>({
   key: "toDo",
   default: {
-    "TO DO": [
+    /* "TO DO": [
       { id: 1, text: "This cards are set by default." },
       { id: 2, text: "UberEats Clone" },
     ],
@@ -91,7 +91,22 @@ export const toDoState = atom<IToDoState>({
       { id: 4, text: "TypeScript" },
       { id: 5, text: "CSS Layout Masterclass" },
     ],
-    DONE: [{ id: 6, text: "Zoom Clone" }],
+    DONE: [{ id: 6, text: "Zoom Clone" }], */
+
+    "Code Challenge": [
+      { id: 1, text: "스타일 꾸미기" },
+      { id: 2, text: "localStorage 이용해서 persistance 구현" },
+      { id: 3, text: "작성한 투두 삭제" },
+      { id: 4, text: "보드 생성" },
+    ],
+    Advanced: [
+      { id: 5, text: "보드 순서 바꾸기" },
+      { id: 6, text: "보드 전체 삭제" },
+      { id: 7, text: "보드 삭제" },
+      { id: 8, text: "투두 수정" },
+      { id: 9, text: "보드 제목 수정" },
+    ],
+    Done: [],
   },
   effects: [localStorageEffect("toDo")],
 });
