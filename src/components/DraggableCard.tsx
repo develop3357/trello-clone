@@ -4,11 +4,15 @@ import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { ToDoManager, toDoState } from "../atoms";
 
-const Card = styled.div<{ isMovable: boolean }>`
+const Card = styled.div<{ isMovable: boolean; isToBeDeleted: boolean }>`
   border-radius: 5px;
   padding: 10px;
   background-color: ${(props) =>
-    props.isMovable ? "#88cfff" : props.theme.cardColor};
+    props.isToBeDeleted
+      ? "red"
+      : props.isMovable
+      ? "#88cfff"
+      : props.theme.cardColor};
   margin-bottom: 5px;
   box-shadow: ${(props) =>
     props.isMovable ? "0px 2px 5px rgba(0,0,0,0.05)" : "none"};
@@ -62,6 +66,7 @@ function DraggableCard({
                 snapshot.draggingOver &&
                 snapshot.draggingOver !== boardId
             )}
+            isToBeDeleted={Boolean(snapshot.draggingOver === "background")}
             ref={provided.innerRef}
             {...provided.dragHandleProps}
             {...provided.draggableProps}
