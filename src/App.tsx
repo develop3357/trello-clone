@@ -1,4 +1,4 @@
-import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { ToDoManager, toDoState } from "./atoms";
@@ -8,6 +8,7 @@ const Wrapper = styled.div`
   height: 100vh;
   overflow-y: hidden;
   display: flex;
+  flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
 `;
@@ -24,6 +25,12 @@ const BoardControl = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+`;
+
+const CardRemovalArea = styled.div`
+  background-color: transparent;
+  width: 100%;
+  height: 100%;
 `;
 
 const AddNewBoard = styled.div`
@@ -50,6 +57,15 @@ function App() {
   const [toDos, setToDos] = useRecoilState(toDoState);
   const onDragEnd = ({ destination, source }: DropResult) => {
     if (!destination) return;
+    if (destination.droppableId === "background") {
+      setToDos((currentToDos) => {
+        return ToDoManager.init(currentToDos)
+          .removeCard(source.droppableId, source.index)
+          .done();
+      });
+      return;
+    }
+
     setToDos((currentToDos) => {
       return ToDoManager.init(currentToDos)
         .moveCard(
@@ -84,9 +100,19 @@ function App() {
           ))}
           <BoardControl>
             <AddNewBoard onClick={onAddNewBoardClick}>+ New Board</AddNewBoard>
-            <RemoveAll onClick={onRemoveAllClick}>- Remove All</RemoveAll>
+            <RemoveAll onClick={onRemoveAllClick}>
+              - Remove All Boards
+            </RemoveAll>
           </BoardControl>
         </Boards>
+        <Droppable droppableId="background">
+          {(provided) => (
+            <CardRemovalArea
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+            ></CardRemovalArea>
+          )}
+        </Droppable>
       </Wrapper>
     </DragDropContext>
   );
